@@ -1,12 +1,12 @@
 {
-  "name": "outputs-payload-cms",
+  "name": "yeditepe-payload-cms",
   "version": "1.0.0",
-  "description": "A blank template to get started with Payload 3.0",
+  "description": "Yeditepe website content model, Turkish and English, no appointments",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
-    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --hostname 127.0.0.1 --port 3202",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
@@ -15,9 +15,21 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "typecheck": "tsc --noEmit",
+    "crawl": "python3 scripts/harvest-public.py",
+    "import:public": "node --import tsx scripts/import-public.ts",
+    "verify:model": "node --import tsx scripts/verify-model.ts",
+    "prepare:full": "python3 scripts/prepare-full.py",
+    "crawl:extra": "python3 scripts/collect-extra.py",
+    "download:assets": "python3 scripts/download-assets.py",
+    "import:assets": "node --import tsx scripts/import-assets.ts",
+    "import:full": "node --import tsx scripts/import-full.ts"
   },
   "dependencies": {
+    "@payloadcms/db-sqlite": "3.90.2",
+    "@payloadcms/live-preview": "3.90.2",
+    "@payloadcms/live-preview-react": "3.90.2",
     "@payloadcms/next": "3.90.2",
     "@payloadcms/richtext-lexical": "3.90.2",
     "@payloadcms/ui": "3.90.2",
@@ -28,12 +40,12 @@
     "payload": "3.90.2",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "sharp": "0.35.4",
-    "@payloadcms/db-sqlite": "3.90.2"
+    "sharp": "0.35.4"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2",
     "@testing-library/react": "16.3.0",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "22.19.9",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

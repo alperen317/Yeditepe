@@ -1,0 +1,33 @@
+import type { GlobalConfig } from 'payload'
+import {previewURL} from '../lib/previewURLs'
+export const Homepage: GlobalConfig = {
+  slug: 'homepage', label: 'Ana sayfa / Homepage',
+  access: { read: ({ req }) => Boolean(req.user), update: ({ req }) => Boolean(req.user) },
+  admin: {preview:(doc,options)=>previewURL(doc,options.locale,'homepage')},
+  fields: [
+    { name: 'heroVideo', label: 'Üst alan videosu / Intro video', type: 'upload', relationTo: 'media', admin: {description: 'Bannerın üstünde gösterilecek sessiz video. / Muted video above the banner.'} },
+    { name: 'heroVideoPoster', label: 'Video kapak görseli / Video poster', type: 'upload', relationTo: 'media' },
+    { name: 'eyebrow', type: 'text', localized: true },
+    { name: 'heroSlides', type: 'relationship', relationTo: 'sliders', hasMany: true, localized: true },
+    { name: 'unitsHeading', type: 'text', localized: true },
+    { name: 'unitsDescription', type: 'textarea', localized: true },
+    { name: 'featuredUnits', type: 'relationship', relationTo: 'medical-units', hasMany: true, localized: true },
+    { name: 'facilitiesHeading', type: 'text', localized: true },
+    { name: 'featuredFacilities', type: 'relationship', relationTo: 'facilities', hasMany: true, localized: true },
+    { name: 'articlesHeading', type: 'text', localized: true },
+    { name: 'featuredArticles', type: 'relationship', relationTo: 'articles', hasMany: true, localized: true },
+    { name: 'aboutHeading', type: 'text', localized: true },
+    { name: 'aboutDescription', type: 'textarea', localized: true },
+    { name: 'statisticsHeading', label: 'İstatistik bölümü başlığı', type: 'text', localized: true },
+    { name: 'statisticsDescription', label: 'Hastaneler hakkında kısa bilgi', type: 'textarea', localized: true },
+    { name: 'experienceCount', label: 'Yıllık deneyim sayısı', type: 'number', min: 0, defaultValue: 25 },
+    { name: 'experienceLabel', label: 'Yıllık deneyim etiketi', type: 'text', localized: true },
+    { name: 'staffCount', label: 'Çalışan sayısı', type: 'number', min: 0, defaultValue: 1500 },
+    { name: 'staffLabel', label: 'Çalışan etiketi', type: 'text', localized: true },
+    { name: 'clinicsCount', label: 'Klinik sayısı', type: 'number', min: 0, defaultValue: 100 },
+    { name: 'clinicsLabel', label: 'Klinik etiketi', type: 'text', localized: true },
+    { name: 'bedsCount', label: 'Yatak kapasitesi sayısı', type: 'number', min: 0, defaultValue: 300 },
+    { name: 'bedsLabel', label: 'Yatak kapasitesi etiketi', type: 'text', localized: true },
+    { name: 'phone', type: 'text' },
+  ],
+}

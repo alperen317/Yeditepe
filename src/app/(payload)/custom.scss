@@ -1,0 +1,6 @@
+.preview-focused-field{outline:2px solid #20aec3;outline-offset:8px;border-radius:4px;transition:outline-color .2s;}
+.yeditepe-admin-logo{display:flex;align-items:center;justify-content:center;max-width:360px;margin:auto;padding:22px 26px;border-radius:14px;background:#072e68;box-sizing:border-box;}
+.yeditepe-admin-logo img{display:block;width:100%;height:auto;}
+.yeditepe-admin-icon{display:flex;align-items:center;width:160px;flex-shrink:0;background:#072e68;border-radius:5px;padding:7px 9px;box-sizing:border-box;}
+.yeditepe-admin-icon img{display:block;width:100%;height:auto;}
+.step-nav__home:has(.yeditepe-admin-icon){width:auto;height:auto;flex-shrink:0;}

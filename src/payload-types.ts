@@ -69,6 +69,31 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    facilities: Facility;
+    'medical-units': MedicalUnit;
+    doctors: Doctor;
+    'doctor-cv-entries': DoctorCvEntry;
+    categories: Category;
+    articles: Article;
+    videos: Video;
+    events: Event;
+    pages: Page;
+    faqs: Faq;
+    'checkup-packages': CheckupPackage;
+    'checkup-items': CheckupItem;
+    'package-items': PackageItem;
+    'homepage-sections': HomepageSection;
+    redirects: Redirect;
+    'doctor-titles': DoctorTitle;
+    tags: Tag;
+    'medical-technologies': MedicalTechnology;
+    'board-members': BoardMember;
+    sliders: Slider;
+    menus: Menu;
+    'menu-items': MenuItem;
+    'query-presets': QueryPreset;
+    'reusable-blocks': ReusableBlock;
+    'migration-records': MigrationRecord;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,18 +103,47 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    facilities: FacilitiesSelect<false> | FacilitiesSelect<true>;
+    'medical-units': MedicalUnitsSelect<false> | MedicalUnitsSelect<true>;
+    doctors: DoctorsSelect<false> | DoctorsSelect<true>;
+    'doctor-cv-entries': DoctorCvEntriesSelect<false> | DoctorCvEntriesSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    videos: VideosSelect<false> | VideosSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    faqs: FaqsSelect<false> | FaqsSelect<true>;
+    'checkup-packages': CheckupPackagesSelect<false> | CheckupPackagesSelect<true>;
+    'checkup-items': CheckupItemsSelect<false> | CheckupItemsSelect<true>;
+    'package-items': PackageItemsSelect<false> | PackageItemsSelect<true>;
+    'homepage-sections': HomepageSectionsSelect<false> | HomepageSectionsSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    'doctor-titles': DoctorTitlesSelect<false> | DoctorTitlesSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
+    'medical-technologies': MedicalTechnologiesSelect<false> | MedicalTechnologiesSelect<true>;
+    'board-members': BoardMembersSelect<false> | BoardMembersSelect<true>;
+    sliders: SlidersSelect<false> | SlidersSelect<true>;
+    menus: MenusSelect<false> | MenusSelect<true>;
+    'menu-items': MenuItemsSelect<false> | MenuItemsSelect<true>;
+    'query-presets': QueryPresetsSelect<false> | QueryPresetsSelect<true>;
+    'reusable-blocks': ReusableBlocksSelect<false> | ReusableBlocksSelect<true>;
+    'migration-records': MigrationRecordsSelect<false> | MigrationRecordsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
-  fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
-  locale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('tr' | 'en') | ('tr' | 'en')[];
+  globals: {
+    homepage: Homepage;
+  };
+  globalsSelect: {
+    homepage: HomepageSelect<false> | HomepageSelect<true>;
+  };
+  locale: 'tr' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -122,7 +176,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -130,6 +184,7 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -147,8 +202,19 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
-  alt: string;
+  id: number;
+  is_public?: boolean | null;
+  source_sha256?: string | null;
+  source_urls?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  alt?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -163,10 +229,3579 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "facilities".
+ */
+export interface Facility {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  internal_name?: string | null;
+  type?: ('hospital' | 'medical_center' | 'laboratory') | null;
+  phone?: string | null;
+  email?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  cover_image?: (number | null) | Media;
+  fax?: string | null;
+  google_maps_url?: string | null;
+  yandex_url?: string | null;
+  bing_url?: string | null;
+  show_jci_logo?: boolean | null;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  summary?: string | null;
+  /**
+   * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+   */
+  body?: string | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  address?: string | null;
+  transport_information?: string | null;
+  medical_units?: (number | MedicalUnit)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "medical-units".
+ */
+export interface MedicalUnit {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  internal_name?: string | null;
+  type?: ('specialty' | 'clinic' | 'center' | 'unit') | null;
+  cover_image?: (number | null) | Media;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  summary?: string | null;
+  /**
+   * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+   */
+  body?: string | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  related_units?:
+    | {
+        item: number | MedicalUnit;
+        relation_type?: ('related' | 'subunit') | null;
+        id?: string | null;
+      }[]
+    | null;
+  council_members?: (number | Doctor)[] | null;
+  selected_articles?:
+    | {
+        item: number | Article;
+        relation_type?: ('related_disease' | 'related_article') | null;
+        id?: string | null;
+      }[]
+    | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "doctors".
+ */
+export interface Doctor {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  full_name?: string | null;
+  /**
+   * Sitede gösterilen ünvan ve isim. Her dil için ayrı düzenlenir.
+   */
+  display_name?: string | null;
+  photo?: (number | null) | Media;
+  public_email?: string | null;
+  spoken_languages?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  public_emails?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  source_node_id?: number | null;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  academic_title?: string | null;
+  biography?: string | null;
+  interests?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  title_id?: (number | null) | DoctorTitle;
+  editorial_board_member?: boolean | null;
+  professional_roles?: string | null;
+  administrative_titles?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  insurance_agreement_text?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  academic_statistics?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  facilities?: (number | Facility)[] | null;
+  medical_units?: (number | MedicalUnit)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * İşaretli doktorlardan en fazla 10 kişi ana sayfada gösterilir. / Up to 10 selected doctors appear on the homepage.
+   */
+  show_on_homepage?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "doctor-titles".
+ */
+export interface DoctorTitle {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  key?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  abbreviation?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "checkup-packages".
+ */
+export interface CheckupPackage {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  internal_name?: string | null;
+  target_group?: ('women' | 'men' | 'general' | 'special') | null;
+  age_min?: number | null;
+  age_max?: number | null;
+  cover_image?: (number | null) | Media;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  summary?: string | null;
+  /**
+   * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+   */
+  body?: string | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  facilities?: (number | Facility)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs".
+ */
+export interface Faq {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  question?: string | null;
+  answer?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reusable-blocks".
+ */
+export interface ReusableBlock {
+  id: number;
+  title: string;
+  source_key?: string | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "query-presets".
+ */
+export interface QueryPreset {
+  id: number;
+  key?: string | null;
+  target_collection?:
+    | (
+        | 'facilities'
+        | 'medical_units'
+        | 'doctors'
+        | 'articles'
+        | 'videos'
+        | 'events'
+        | 'medical_technologies'
+        | 'board_members'
+      )
+    | null;
+  selection?: ('all_published' | 'by_doctor' | 'by_unit' | 'by_facility' | 'featured' | 'most_read') | null;
+  sort_field?: string | null;
+  limit?: number | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  kind?: ('health_guide' | 'corporate_news') | null;
+  cover_image?: (number | null) | Media;
+  original_published_at?: string | null;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  summary?: string | null;
+  /**
+   * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+   */
+  body?: string | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  published_at?: string | null;
+  reviewed_at?: string | null;
+  reviewer_id?: (number | null) | Doctor;
+  content_date?: string | null;
+  featured?: boolean | null;
+  most_read?: boolean | null;
+  show_in_sitemap?: boolean | null;
+  reading_minutes?: number | null;
+  doctors?:
+    | {
+        item: number | Doctor;
+        role?: ('author' | 'contributor' | 'related_expert') | null;
+        id?: string | null;
+      }[]
+    | null;
+  medical_units?: (number | MedicalUnit)[] | null;
+  categories?: (number | Category)[] | null;
+  related_articles?:
+    | {
+        item: number | Article;
+        source_role?: ('related_content' | 'corporate_related_news') | null;
+        id?: string | null;
+      }[]
+    | null;
+  videos?:
+    | {
+        item: number | Video;
+        source_role?: ('blog' | 'corporate_news') | null;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?: (number | Faq)[] | null;
+  tags?: (number | Tag)[] | null;
+  editorial_board?: (number | Doctor)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  internal_name?: string | null;
+  parent_id?: (number | null) | Category;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  description?: string | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos".
+ */
+export interface Video {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  provider?: ('youtube' | 'vimeo' | 'uploaded') | null;
+  provider_video_id?: string | null;
+  video_file?: (number | null) | Media;
+  format?: ('standard' | 'short') | null;
+  thumbnail?: (number | null) | Media;
+  duration_seconds?: number | null;
+  short_video_id?: string | null;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  summary?: string | null;
+  /**
+   * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+   */
+  body?: string | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  transcript?: string | null;
+  subtitles_file?: (number | null) | Media;
+  content_date?: string | null;
+  doctors?: (number | Doctor)[] | null;
+  medical_units?: (number | MedicalUnit)[] | null;
+  related_videos?: (number | Video)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  internal_name?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "doctor-cv-entries".
+ */
+export interface DoctorCvEntry {
+  id: number;
+  doctor_id?: (number | null) | Doctor;
+  kind?: ('education' | 'specialization' | 'employment' | 'membership' | 'award') | null;
+  start_year?: number | null;
+  end_year?: number | null;
+  sort?: number | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  institution?: string | null;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  starts_at?: string | null;
+  ends_at?: string | null;
+  timezone?: string | null;
+  facility_id?: (number | null) | Facility;
+  cover_image?: (number | null) | Media;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  summary?: string | null;
+  /**
+   * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+   */
+  body?: string | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  venue_description?: string | null;
+  information_text?: string | null;
+  attachment?: (number | null) | Media;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  internal_name?: string | null;
+  type?: ('corporate' | 'patient_guide' | 'policy' | 'landing' | 'component' | 'project') | null;
+  cover_image?: (number | null) | Media;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  summary?: string | null;
+  /**
+   * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+   */
+  body?: string | null;
+  slug?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  social_image?: (number | null) | Media;
+  faqs?: (number | Faq)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "checkup-items".
+ */
+export interface CheckupItem {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  internal_name?: string | null;
+  type?: ('examination' | 'imaging' | 'laboratory' | 'pathology' | 'other') | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "package-items".
+ */
+export interface PackageItem {
+  id: number;
+  package_id?: (number | null) | CheckupPackage;
+  item_id?: (number | null) | CheckupItem;
+  sort?: number | null;
+  conditional?: boolean | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  condition_note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage-sections".
+ */
+export interface HomepageSection {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  sort?: number | null;
+  source_url?: string | null;
+  key?: string | null;
+  layout?: ('hero' | 'cards' | 'list') | null;
+  starts_at?: string | null;
+  ends_at?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  description?: string | null;
+  items?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  old_path?: string | null;
+  new_path?: string | null;
+  http_code?: ('301' | '308') | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "medical-technologies".
+ */
+export interface MedicalTechnology {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  device_type?: string | null;
+  cover_image?: (number | null) | Media;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  slug?: string | null;
+  summary?: string | null;
+  facilities?: (number | Facility)[] | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "board-members".
+ */
+export interface BoardMember {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  full_name?: string | null;
+  photo?: (number | null) | Media;
+  sort?: number | null;
+  source_bundle?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  biography?: string | null;
+  slug?: string | null;
+  blocks?:
+    | (
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            icon?: (number | null) | Media;
+            link?: string | null;
+            variant?: ('standard' | 'color' | 'icon' | 'style' | 'highlight') | null;
+            horizontal?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-card';
+          }
+        | {
+            title?: string | null;
+            summary?: string | null;
+            packages?: (number | CheckupPackage)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-checkup';
+          }
+        | {
+            title?: string | null;
+            faqs?: (number | Faq)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-faq';
+          }
+        | {
+            title?: string | null;
+            visible_items?: number | null;
+            images?: (number | Media)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-gallery';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            height?: number | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-iframe';
+          }
+        | {
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            caption?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            image?: (number | null) | Media;
+            alt_text?: string | null;
+            reverse?: boolean | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-image-text';
+          }
+        | {
+            title?: string | null;
+            variant?: ('grid' | 'tabs' | 'scroll_tabs' | 'accordion' | 'popup') | null;
+            columns_large?: number | null;
+            columns_medium?: number | null;
+            columns_small?: number | null;
+            hidden?: boolean | null;
+            equal_rows?: boolean | null;
+            children?: (number | ReusableBlock)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-layout';
+          }
+        | {
+            title?: string | null;
+            links?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-links';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-list';
+          }
+        | {
+            title?: string | null;
+            query_preset_id?: (number | null) | QueryPreset;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-query';
+          }
+        | {
+            title?: string | null;
+            articles?: (number | Article)[] | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-related-articles';
+          }
+        | {
+            /**
+             * Kaynak HTML, aktarım doğrulaması için korunur. Yeni içerik için rich text alanını kullanın.
+             */
+            body?: string | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-text';
+          }
+        | {
+            title?: string | null;
+            entries?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-timeline';
+          }
+        | {
+            subtitle?: string | null;
+            link?: string | null;
+            icon?: (number | null) | Media;
+            region?: string | null;
+            label?: string | null;
+            source_paragraph_id?: number | null;
+            source_revision_id?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'block-transport';
+          }
+      )[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sliders".
+ */
+export interface Slider {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  internal_name?: string | null;
+  sort?: number | null;
+  starts_at?: string | null;
+  ends_at?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  subtitle?: string | null;
+  summary?: string | null;
+  desktop_image?: (number | null) | Media;
+  mobile_image?: (number | null) | Media;
+  link?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menus".
+ */
+export interface Menu {
+  id: number;
+  key?: string | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu-items".
+ */
+export interface MenuItem {
+  id: number;
+  status?: ('draft' | 'published' | 'archived') | null;
+  menu_id?: (number | null) | Menu;
+  parent_id?: (number | null) | MenuItem;
+  sort?: number | null;
+  /**
+   * Tekrarlı aktarımda sabit kaynak kimliği
+   */
+  source_key?: string | null;
+  /**
+   * Drupal kimlik, revizyon ve eksik alan bilgileri
+   */
+  source_metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translation_status?: ('draft' | 'in_review' | 'published' | 'archived') | null;
+  title?: string | null;
+  url?: string | null;
+  open_new_tab?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "migration-records".
+ */
+export interface MigrationRecord {
+  id: number;
+  source_url: string;
+  final_url?: string | null;
+  title?: string | null;
+  language: 'tr' | 'en';
+  canonical?: string | null;
+  body_html?: string | null;
+  main_html?: string | null;
+  source_links?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  source_images?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translations?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  extraction?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  review_status?: ('pending' | 'reviewed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -183,20 +3818,120 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'facilities';
+        value: number | Facility;
+      } | null)
+    | ({
+        relationTo: 'medical-units';
+        value: number | MedicalUnit;
+      } | null)
+    | ({
+        relationTo: 'doctors';
+        value: number | Doctor;
+      } | null)
+    | ({
+        relationTo: 'doctor-cv-entries';
+        value: number | DoctorCvEntry;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'articles';
+        value: number | Article;
+      } | null)
+    | ({
+        relationTo: 'videos';
+        value: number | Video;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'faqs';
+        value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'checkup-packages';
+        value: number | CheckupPackage;
+      } | null)
+    | ({
+        relationTo: 'checkup-items';
+        value: number | CheckupItem;
+      } | null)
+    | ({
+        relationTo: 'package-items';
+        value: number | PackageItem;
+      } | null)
+    | ({
+        relationTo: 'homepage-sections';
+        value: number | HomepageSection;
+      } | null)
+    | ({
+        relationTo: 'redirects';
+        value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'doctor-titles';
+        value: number | DoctorTitle;
+      } | null)
+    | ({
+        relationTo: 'tags';
+        value: number | Tag;
+      } | null)
+    | ({
+        relationTo: 'medical-technologies';
+        value: number | MedicalTechnology;
+      } | null)
+    | ({
+        relationTo: 'board-members';
+        value: number | BoardMember;
+      } | null)
+    | ({
+        relationTo: 'sliders';
+        value: number | Slider;
+      } | null)
+    | ({
+        relationTo: 'menus';
+        value: number | Menu;
+      } | null)
+    | ({
+        relationTo: 'menu-items';
+        value: number | MenuItem;
+      } | null)
+    | ({
+        relationTo: 'query-presets';
+        value: number | QueryPreset;
+      } | null)
+    | ({
+        relationTo: 'reusable-blocks';
+        value: number | ReusableBlock;
+      } | null)
+    | ({
+        relationTo: 'migration-records';
+        value: number | MigrationRecord;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +3941,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +3964,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -247,6 +3982,7 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  resetPasswordRequestedAt?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -262,6 +3998,9 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  is_public?: T;
+  source_sha256?: T;
+  source_urls?: T;
   alt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -274,6 +4013,2814 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "facilities_select".
+ */
+export interface FacilitiesSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  internal_name?: T;
+  type?: T;
+  phone?: T;
+  email?: T;
+  latitude?: T;
+  longitude?: T;
+  cover_image?: T;
+  fax?: T;
+  google_maps_url?: T;
+  yandex_url?: T;
+  bing_url?: T;
+  show_jci_logo?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  summary?: T;
+  body?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  address?: T;
+  transport_information?: T;
+  medical_units?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "medical-units_select".
+ */
+export interface MedicalUnitsSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  internal_name?: T;
+  type?: T;
+  cover_image?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  summary?: T;
+  body?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  related_units?:
+    | T
+    | {
+        item?: T;
+        relation_type?: T;
+        id?: T;
+      };
+  council_members?: T;
+  selected_articles?:
+    | T
+    | {
+        item?: T;
+        relation_type?: T;
+        id?: T;
+      };
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "doctors_select".
+ */
+export interface DoctorsSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  full_name?: T;
+  display_name?: T;
+  photo?: T;
+  public_email?: T;
+  spoken_languages?: T;
+  public_emails?: T;
+  source_node_id?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  academic_title?: T;
+  biography?: T;
+  interests?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  title_id?: T;
+  editorial_board_member?: T;
+  professional_roles?: T;
+  administrative_titles?: T;
+  insurance_agreement_text?: T;
+  academic_statistics?: T;
+  facilities?: T;
+  medical_units?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  content?: T;
+  show_on_homepage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "doctor-cv-entries_select".
+ */
+export interface DoctorCvEntriesSelect<T extends boolean = true> {
+  doctor_id?: T;
+  kind?: T;
+  start_year?: T;
+  end_year?: T;
+  sort?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  institution?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  internal_name?: T;
+  parent_id?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  description?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  kind?: T;
+  cover_image?: T;
+  original_published_at?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  summary?: T;
+  body?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  published_at?: T;
+  reviewed_at?: T;
+  reviewer_id?: T;
+  content_date?: T;
+  featured?: T;
+  most_read?: T;
+  show_in_sitemap?: T;
+  reading_minutes?: T;
+  doctors?:
+    | T
+    | {
+        item?: T;
+        role?: T;
+        id?: T;
+      };
+  medical_units?: T;
+  categories?: T;
+  related_articles?:
+    | T
+    | {
+        item?: T;
+        source_role?: T;
+        id?: T;
+      };
+  videos?:
+    | T
+    | {
+        item?: T;
+        source_role?: T;
+        id?: T;
+      };
+  faqs?: T;
+  tags?: T;
+  editorial_board?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos_select".
+ */
+export interface VideosSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  provider?: T;
+  provider_video_id?: T;
+  video_file?: T;
+  format?: T;
+  thumbnail?: T;
+  duration_seconds?: T;
+  short_video_id?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  summary?: T;
+  body?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  transcript?: T;
+  subtitles_file?: T;
+  content_date?: T;
+  doctors?: T;
+  medical_units?: T;
+  related_videos?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  starts_at?: T;
+  ends_at?: T;
+  timezone?: T;
+  facility_id?: T;
+  cover_image?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  summary?: T;
+  body?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  venue_description?: T;
+  information_text?: T;
+  attachment?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  internal_name?: T;
+  type?: T;
+  cover_image?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  summary?: T;
+  body?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  faqs?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs_select".
+ */
+export interface FaqsSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  question?: T;
+  answer?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "checkup-packages_select".
+ */
+export interface CheckupPackagesSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  internal_name?: T;
+  target_group?: T;
+  age_min?: T;
+  age_max?: T;
+  cover_image?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  summary?: T;
+  body?: T;
+  slug?: T;
+  seo_title?: T;
+  seo_description?: T;
+  social_image?: T;
+  facilities?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "checkup-items_select".
+ */
+export interface CheckupItemsSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  internal_name?: T;
+  type?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "package-items_select".
+ */
+export interface PackageItemsSelect<T extends boolean = true> {
+  package_id?: T;
+  item_id?: T;
+  sort?: T;
+  conditional?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  condition_note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage-sections_select".
+ */
+export interface HomepageSectionsSelect<T extends boolean = true> {
+  status?: T;
+  sort?: T;
+  source_url?: T;
+  key?: T;
+  layout?: T;
+  starts_at?: T;
+  ends_at?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  description?: T;
+  items?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  old_path?: T;
+  new_path?: T;
+  http_code?: T;
+  source_key?: T;
+  source_metadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "doctor-titles_select".
+ */
+export interface DoctorTitlesSelect<T extends boolean = true> {
+  status?: T;
+  key?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  abbreviation?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  status?: T;
+  internal_name?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "medical-technologies_select".
+ */
+export interface MedicalTechnologiesSelect<T extends boolean = true> {
+  status?: T;
+  device_type?: T;
+  cover_image?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  slug?: T;
+  summary?: T;
+  facilities?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "board-members_select".
+ */
+export interface BoardMembersSelect<T extends boolean = true> {
+  status?: T;
+  full_name?: T;
+  photo?: T;
+  sort?: T;
+  source_bundle?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  biography?: T;
+  slug?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sliders_select".
+ */
+export interface SlidersSelect<T extends boolean = true> {
+  status?: T;
+  internal_name?: T;
+  sort?: T;
+  starts_at?: T;
+  ends_at?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  subtitle?: T;
+  summary?: T;
+  desktop_image?: T;
+  mobile_image?: T;
+  link?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menus_select".
+ */
+export interface MenusSelect<T extends boolean = true> {
+  key?: T;
+  source_key?: T;
+  source_metadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu-items_select".
+ */
+export interface MenuItemsSelect<T extends boolean = true> {
+  status?: T;
+  menu_id?: T;
+  parent_id?: T;
+  sort?: T;
+  source_key?: T;
+  source_metadata?: T;
+  translation_status?: T;
+  title?: T;
+  url?: T;
+  open_new_tab?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "query-presets_select".
+ */
+export interface QueryPresetsSelect<T extends boolean = true> {
+  key?: T;
+  target_collection?: T;
+  selection?: T;
+  sort_field?: T;
+  limit?: T;
+  source_key?: T;
+  source_metadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reusable-blocks_select".
+ */
+export interface ReusableBlocksSelect<T extends boolean = true> {
+  title?: T;
+  source_key?: T;
+  blocks?:
+    | T
+    | {
+        'block-card'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              icon?: T;
+              link?: T;
+              variant?: T;
+              horizontal?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-checkup'?:
+          | T
+          | {
+              title?: T;
+              summary?: T;
+              packages?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-faq'?:
+          | T
+          | {
+              title?: T;
+              faqs?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-gallery'?:
+          | T
+          | {
+              title?: T;
+              visible_items?: T;
+              images?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-iframe'?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              height?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image'?:
+          | T
+          | {
+              image?: T;
+              alt_text?: T;
+              caption?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-image-text'?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              image?: T;
+              alt_text?: T;
+              reverse?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-layout'?:
+          | T
+          | {
+              title?: T;
+              variant?: T;
+              columns_large?: T;
+              columns_medium?: T;
+              columns_small?: T;
+              hidden?: T;
+              equal_rows?: T;
+              children?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-links'?:
+          | T
+          | {
+              title?: T;
+              links?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-list'?:
+          | T
+          | {
+              title?: T;
+              items?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-query'?:
+          | T
+          | {
+              title?: T;
+              query_preset_id?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-related-articles'?:
+          | T
+          | {
+              title?: T;
+              articles?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-text'?:
+          | T
+          | {
+              body?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-timeline'?:
+          | T
+          | {
+              title?: T;
+              entries?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+        'block-transport'?:
+          | T
+          | {
+              subtitle?: T;
+              link?: T;
+              icon?: T;
+              region?: T;
+              label?: T;
+              source_paragraph_id?: T;
+              source_revision_id?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "migration-records_select".
+ */
+export interface MigrationRecordsSelect<T extends boolean = true> {
+  source_url?: T;
+  final_url?: T;
+  title?: T;
+  language?: T;
+  canonical?: T;
+  body_html?: T;
+  main_html?: T;
+  source_links?: T;
+  source_images?: T;
+  translations?: T;
+  extraction?: T;
+  review_status?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -314,6 +6861,75 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage".
+ */
+export interface Homepage {
+  id: number;
+  /**
+   * Bannerın üstünde gösterilecek sessiz video. / Muted video above the banner.
+   */
+  heroVideo?: (number | null) | Media;
+  heroVideoPoster?: (number | null) | Media;
+  eyebrow?: string | null;
+  heroSlides?: (number | Slider)[] | null;
+  unitsHeading?: string | null;
+  unitsDescription?: string | null;
+  featuredUnits?: (number | MedicalUnit)[] | null;
+  facilitiesHeading?: string | null;
+  featuredFacilities?: (number | Facility)[] | null;
+  articlesHeading?: string | null;
+  featuredArticles?: (number | Article)[] | null;
+  aboutHeading?: string | null;
+  aboutDescription?: string | null;
+  statisticsHeading?: string | null;
+  statisticsDescription?: string | null;
+  experienceCount?: number | null;
+  experienceLabel?: string | null;
+  staffCount?: number | null;
+  staffLabel?: string | null;
+  clinicsCount?: number | null;
+  clinicsLabel?: string | null;
+  bedsCount?: number | null;
+  bedsLabel?: string | null;
+  phone?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage_select".
+ */
+export interface HomepageSelect<T extends boolean = true> {
+  heroVideo?: T;
+  heroVideoPoster?: T;
+  eyebrow?: T;
+  heroSlides?: T;
+  unitsHeading?: T;
+  unitsDescription?: T;
+  featuredUnits?: T;
+  facilitiesHeading?: T;
+  featuredFacilities?: T;
+  articlesHeading?: T;
+  featuredArticles?: T;
+  aboutHeading?: T;
+  aboutDescription?: T;
+  statisticsHeading?: T;
+  statisticsDescription?: T;
+  experienceCount?: T;
+  experienceLabel?: T;
+  staffCount?: T;
+  staffLabel?: T;
+  clinicsCount?: T;
+  clinicsLabel?: T;
+  bedsCount?: T;
+  bedsLabel?: T;
+  phone?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

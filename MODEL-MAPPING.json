@@ -1,0 +1,69 @@
+{
+  "locales": [
+    "tr",
+    "en"
+  ],
+  "source": "Drupal panel analysis / content-model-v2",
+  "collections": 24,
+  "blockTypes": 15,
+  "translationTables": {
+    "facilities_translations": "facilities",
+    "medical_units_translations": "medical_units",
+    "doctors_translations": "doctors",
+    "doctor_cv_entries_translations": "doctor_cv_entries",
+    "categories_translations": "categories",
+    "articles_translations": "articles",
+    "videos_translations": "videos",
+    "events_translations": "events",
+    "pages_translations": "pages",
+    "faqs_translations": "faqs",
+    "checkup_packages_translations": "checkup_packages",
+    "checkup_items_translations": "checkup_items",
+    "package_items_translations": "package_items",
+    "homepage_sections_translations": "homepage_sections",
+    "doctor_titles_translations": "doctor_titles",
+    "tags_translations": "tags",
+    "medical_technologies_translations": "medical_technologies",
+    "board_members_translations": "board_members",
+    "sliders_translations": "sliders",
+    "menu_items_translations": "menu_items"
+  },
+  "junctionsEmbedded": [
+    "article_categories",
+    "article_doctors",
+    "article_editorial_board",
+    "article_faqs",
+    "article_relations",
+    "article_tags",
+    "article_units",
+    "article_videos",
+    "block_checkup_packages",
+    "block_faq_items",
+    "block_gallery_files",
+    "block_related_article_items",
+    "doctor_facilities",
+    "doctor_units",
+    "facility_units",
+    "package_facilities",
+    "page_faqs",
+    "technology_facilities",
+    "unit_articles",
+    "unit_council_members",
+    "unit_relations",
+    "video_doctors",
+    "video_relations",
+    "video_units"
+  ],
+  "excluded": [
+    "appointments",
+    "patients",
+    "form_submissions",
+    "medical_results"
+  ],
+  "limitations": [
+    "Inverse relationships are not duplicated; queries use canonical relation owner.",
+    "Recursive block layouts use reusable-blocks references.",
+    "Source Paragraph revisions must be obtained separately.",
+    "Publication workflow is pending."
+  ]
+}

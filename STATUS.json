@@ -1,0 +1,155 @@
+{
+  "target": "Payload CMS",
+  "version": "3.90.2",
+  "languages": [
+    "tr",
+    "en"
+  ],
+  "drupal_mutations": 0,
+  "content_collections": 24,
+  "block_types": 15,
+  "system_and_migration_collections": [
+    "users",
+    "media",
+    "migration-records"
+  ],
+  "public_url_inventory": 4702,
+  "tests": {
+    "typecheck": "passed",
+    "localized_fields_and_relationships": "passed",
+    "unique_source_key": "passed",
+    "anonymous_access_denied": "passed",
+    "repeated_import_no_duplicate_articles": "passed",
+    "full_content_coverage": "passed",
+    "locale_coverage": "passed",
+    "source_media_hashes": "passed",
+    "lexical_upload_relationships": "passed",
+    "foreign_keys": "passed"
+  },
+  "remaining": [
+    "Non-rendered Drupal fields, drafts, private files and exact Paragraph revisions",
+    "Production deployment settings and publication workflow"
+  ],
+  "successful_public_pages": 4964,
+  "main_content_records": 2816,
+  "localized_versions": 4766,
+  "derived_records": 2893,
+  "content_counts": {
+    "facilities": 7,
+    "medical-units": 75,
+    "doctors": 233,
+    "doctor-cv-entries": 2387,
+    "categories": 30,
+    "articles": 1462,
+    "videos": 694,
+    "events": 88,
+    "pages": 190,
+    "faqs": 481,
+    "checkup-packages": 0,
+    "checkup-items": 0,
+    "package-items": 0,
+    "homepage-sections": 0,
+    "redirects": 0,
+    "doctor-titles": 5,
+    "tags": 0,
+    "medical-technologies": 27,
+    "board-members": 10,
+    "sliders": 20,
+    "menus": 4,
+    "menu-items": 90,
+    "query-presets": 0,
+    "reusable-blocks": 0
+  },
+  "media_files": 3621,
+  "media_urls": 3822,
+  "menu_records": 4,
+  "menu_item_records": 90,
+  "public_harvest_complete": true,
+  "full_drupal_database_export": false,
+  "unreachable_source_links": 34,
+  "missing_source_media": [
+    {
+      "url": "https://yeditepehastaneleri.com/sites/default/files/inline-images/image.jpg",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://yeditepehastaneleri.com/sites/default/files/inline-images/thank_you_icon_new.png",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "admin_accounts": 1,
+  "verification_passed": true,
+  "frontend": {
+    "homepage": "implemented",
+    "languages": [
+      "tr",
+      "en"
+    ],
+    "managed_global": "homepage",
+    "local_preview": "http://127.0.0.1:3000/",
+    "checks": {
+      "typecheck": "passed",
+      "production_build": "passed",
+      "desktop_and_mobile": "passed",
+      "locale_switch": "passed",
+      "hero_controls": "passed",
+      "doctor_search_and_detail": "passed"
+    },
+    "publication": "local_development_preview",
+    "other_templates": "initial_list_and_detail",
+    "redesign": {
+      "date": "2026-10-08",
+      "layout": "corporate_hospital",
+      "banner_sizing": "full_bleed_2.3_ratio_cover_with_text_overlay",
+      "typecheck": "passed",
+      "production_build": "passed",
+      "visual_check": "passed",
+      "reference": "https://www.acibadem.com.tr/",
+      "desktop_width": 1440,
+      "mobile_width": 390,
+      "horizontal_overflow": false,
+      "mobile_menu": "passed",
+      "hero_controls": "passed",
+      "locale_switch": "passed",
+      "mobile_all_slides": "passed"
+    },
+    "carousels": {
+      "facilities": 7,
+      "doctors": 10,
+      "cross_locale_detail_fallback": true,
+      "desktop_navigation": "passed",
+      "mobile_overflow": "none",
+      "mobile_facility_navigation": "passed",
+      "doctor_visibility_field": "show_on_homepage",
+      "doctor_limit": 10,
+      "doctor_selected_records": 10
+    },
+    "intro_video": {
+      "media_id": 3600,
+      "poster_media_id": 3601,
+      "position": "above_banner_below_header",
+      "muted": true,
+      "loop": true,
+      "pause_control": true,
+      "respects_reduced_motion": true,
+      "typecheck": "passed",
+      "production_build": "passed",
+      "browser_check": "playing_verified",
+      "server_render_tr_en": "passed",
+      "video_byte_ranges": "passed_206",
+      "original_file_hash": "matched"
+    },
+    "banner_reference_sizes": {
+      "reference": "https://yeditepehastaneleri.com/",
+      "viewport": 1600,
+      "width": 1504,
+      "height": 650,
+      "side_margin": 48,
+      "video_gap": 48,
+      "mobile_width": 358,
+      "mobile_height": 371.95,
+      "mobile_video_gap": 28,
+      "verified": true
+    }
+  }
+}

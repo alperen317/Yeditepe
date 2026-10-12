@@ -48,3 +48,18 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+*.db
+*.db-*
+media/
+imports/
+
+# Local exports, migration scratch files and screenshots
+/work/
+/transfer/
+/*.png
+/*.jpg
+/*.jpeg
+*.tar.gz
+.env.*
+!.env.example
